@@ -8,86 +8,75 @@ using namespace std;
 
 class Solution {
   public:
-  string topoSort(int V,vector<vector<int>>&adj ,int n,unordered_set<char>&letters){
-      // topoSort ka ordering likho aab sidha se
-      //indegree bna lete h
-      vector<int>InDegree(V,0);
-      
-      for(int i=0;i<26;i++){
-          for(auto it:adj[i]){
-                 InDegree[it]++;
-          }
-      }
-      queue<int>q;
-      
-     // map lena he padega kyuki haamko unique laphabet nhi diya 
-     // hua to Map to use karna he padega 
-     
-    for (char ch : letters) {
-            if (InDegree[ch - 'a'] == 0) {
-                  q.push(ch - 'a');
+
+    string findOrder(vector<string>& words) {
+        vector<vector<int>> graph(26);
+
+        // In-degree of each character
+        vector<int> inDegree(26, 0);
+
+        // Tracks which characters are present
+        vector<bool> exists(26, false);
+
+        // Mark existing characters
+        for (const string& word : words) {
+            for (char ch : word) {
+                exists[ch - 'a'] = true;
             }
         }
-      
-      string ans ="";
-      
-      while(!q.empty()){
-           int top =q.front();
-           q.pop();
-           ans += char(top+'a');
-           
-           for(auto it:adj[top]){
-                 InDegree[it]--;
-                 
-                 if(InDegree[it]==0){
-                       q.push(it);
-                 }
-           }
-      }
-      
-     if (ans.size() < letters.size()) return "";
-       return ans;
-       
-  }
-    string findOrder(vector<string> &words) {
-        // code here
-    //to be sorted lexicographically according to the language’s rules.-->>>IMPORTANT LINE TO to catch Somethings to which topic is this come from
-    
-      //ADJ list ka kuch karet h Basicallly graph bnanae ka upaye karte h
-      int V = 26; 
-      unordered_set<char> letters; 
-      
-       for (int i = 0; i < words.size(); i++) {
-            for (char ch : words[i]) {
-                letters.insert(ch); 
+
+        // Build the graph from adjacent words
+        for (int i = 0; i + 1 < words.size(); ++i) {
+            const string& w1 = words[i];
+            const string& w2 = words[i + 1];
+            int len = min(w1.length(), w2.length());
+            int j = 0;
+
+            while (j < len && w1[j] == w2[j])
+                ++j;
+
+            if (j < len) {
+                int u = w1[j] - 'a';
+                int v = w2[j] - 'a';
+                graph[u].push_back(v);
+                inDegree[v]++;
+            } else if (w1.size() > w2.size()) {
+
+                // Invalid input
+                return "";
             }
         }
-       
-        int n = letters.size();
-      vector<vector<int>>adj(26);
-      
-      for(int i=0;i<words.size()-1;i++){
-            string s1 = words[i];
-            string s2 = words[i+1];
-             
-                int len =min(s1.size(),s2.size());
-                
-                  if (s1.size() > s2.size() && s1.substr(0, len) == s2) {
-                     return "";
-                  } 
-                  
-                 for(int j=0;j<len;j++){
-                        if(s1[j] != s2[j]){
-                              adj[s1[j]-'a'].push_back(s2[j]-'a');
-                              break;
-                        }
-                 }
-      }
-      
-      // aab baas Ordering nikalna h
-     
-        return topoSort(V,adj,n,letters);
-        
+
+        // Topological sort
+        queue<int> q;
+        for (int i = 0; i < 26; ++i) {
+            if (exists[i] && inDegree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        string result;
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            result += (char)(u + 'a');
+
+            for (int v : graph[u]) {
+                inDegree[v]--;
+                if (inDegree[v] == 0) {
+                    q.push(v);
+                }
+            }
+        }
+
+        // Check, there was a cycle or not
+        for (int i = 0; i < 26; ++i) {
+            if (exists[i] && inDegree[i] != 0) {
+                return "";
+            }
+        }
+
+        return result;
     }
 };
 
