@@ -7,6 +7,8 @@ using namespace std;
 
 // } Driver Code Ends
 
+// User function template for C++
+
 
 // User function template for C++
 
@@ -14,15 +16,12 @@ class Solution {
   public:
     int majorityElement(vector<int>& arr) {
         // code here
-        int n= arr.size();
-        unordered_map<int, int> freq;
-        for(int i: arr){
-            freq[i]++;
-            if(freq[i]> n/2) return i;
-
+         unordered_map<int , int>mp;
+        for(auto e:arr){
+            mp[e]++;
+            if(mp[e] > arr.size()/2) return e;
         }
         return -1;
-        
     }
 };
 
