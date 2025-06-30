@@ -1,4 +1,3 @@
-![www geeksforgeeks org_user_amarjeetjyotish_ (1)](https://github.com/user-attachments/assets/c6c132dd-41a5-42f0-b8dc-37aa6d0a8c82)# GeeksForGeeks-
 GeeksForGeeks  all Probleam Solutions 
 
 ## 🧑‍💻 Author
