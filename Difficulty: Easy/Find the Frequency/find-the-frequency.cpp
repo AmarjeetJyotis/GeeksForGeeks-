@@ -6,11 +6,12 @@ class Solution {
   public:
     int findFrequency(vector<int> arr, int x) {
         // Your code here
-        int cnt=0;
-        map<int, int>mp;
+        int count=0;
         for(int i=0; i<arr.size(); i++){
-            mp[arr[i]]++;
+            if(arr[i]==x){
+                count++;
+            }
         }
-    return mp[x];
+        return count;
     }
 };
